@@ -302,7 +302,7 @@ function generateInputs(){
   const tCnt = Number(document.getElementById("tCount").value);
 
   /* 수행 */
-  let sHTML = `<div class="section-title">수행평가</div>`;
+  let sHTML = `<div class="section-title">📘 수행평가</div>`;
   for(let i=0;i<sCnt;i++){
     sHTML += `
       <div class="entry">
@@ -317,7 +317,7 @@ function generateInputs(){
   }
 
   /* 지필 */
-  let eHTML = `<div class="section-title">지필평가</div>`;
+  let eHTML = `<div class="section-title">📝 지필평가</div>`;
   for(let i=0;i<tCnt;i++){
     const lbl = tCnt===1 ? "기말고사" : i===0 ? "중간고사" : "기말고사";
 
@@ -480,11 +480,6 @@ function closeModal(){
 window.onclick = e => {
   if(e.target.id === "detailModal") closeModal();
 };
-
-<div style="text-align:center; margin-top:40px; opacity:0.6; font-size:13px;">
-  <div>made by ritual</div>
-  <img src="ritual_qr.png" style="width:80px; margin-top:6px; border-radius:10px;">
-</div>
 
 </script>
 </body>
