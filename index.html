@@ -316,7 +316,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
 <div id="guideModal" class="modal">
   <div class="modal-content">
     <button style="float:right;" class="info-btn" onclick="closeGuide()">닫기</button>
-    <h3 style="margin-bottom:15px;">📚 과목별 비중 안내</h3>
+    <h3 style="margin-bottom:15px;">과목별 비중 안내</h3>
     <p style="font-size:13px; color:#808088; margin-bottom:10px;">과목명을 클릭하면 자동으로 입력됩니다</p>
     
     <table class="guide-table">
@@ -641,14 +641,20 @@ function applySubject(name, sCount, tCount, sWeights, tWeights){
   // 입력 필드 재생성
   generateInputs();
   
-  // 비중 자동 입력
+  // 비중 자동 입력 + placeholder 추가
   setTimeout(() => {
     for(let i=0; i<sCount; i++){
-      const input = document.getElementById(`sw${i}`);
-      if(input) {
-        input.value = sWeights[i];
+      const scoreInput = document.getElementById(`s${i}`);
+      const weightInput = document.getElementById(`sw${i}`);
+      
+      if(scoreInput) {
+        scoreInput.placeholder = "점수를 입력하세요";
+      }
+      
+      if(weightInput) {
+        weightInput.value = sWeights[i];
         // 버튼 활성화
-        const btns = input.nextElementSibling.querySelectorAll(".weight-btn");
+        const btns = weightInput.nextElementSibling.querySelectorAll(".weight-btn");
         btns.forEach(btn => {
           if(btn.textContent.trim() === sWeights[i] + "%"){
             btn.classList.add("active");
@@ -658,11 +664,17 @@ function applySubject(name, sCount, tCount, sWeights, tWeights){
     }
     
     for(let i=0; i<tCount; i++){
-      const input = document.getElementById(`tw${i}`);
-      if(input) {
-        input.value = tWeights[i];
+      const scoreInput = document.getElementById(`t${i}`);
+      const weightInput = document.getElementById(`tw${i}`);
+      
+      if(scoreInput) {
+        scoreInput.placeholder = "점수를 입력하세요";
+      }
+      
+      if(weightInput) {
+        weightInput.value = tWeights[i];
         // 버튼 활성화
-        const btns = input.nextElementSibling.querySelectorAll(".weight-btn");
+        const btns = weightInput.nextElementSibling.querySelectorAll(".weight-btn");
         btns.forEach(btn => {
           if(btn.textContent.trim() === tWeights[i] + "%"){
             btn.classList.add("active");
