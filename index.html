@@ -3,7 +3,25 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="성적계산기">
+<meta name="theme-color" content="#007aff">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23007aff' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-weight='bold'>성</text></svg>">
+<link rel="manifest" href="data:application/json,{
+  &quot;name&quot;: &quot;성적 계산기&quot;,
+  &quot;short_name&quot;: &quot;성적계산기&quot;,
+  &quot;start_url&quot;: &quot;.&quot;,
+  &quot;display&quot;: &quot;standalone&quot;,
+  &quot;background_color&quot;: &quot;%23f4f5f7&quot;,
+  &quot;theme_color&quot;: &quot;%23007aff&quot;,
+  &quot;icons&quot;: [{
+    &quot;src&quot;: &quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23007aff' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-weight='bold'>성</text></svg>&quot;,
+    &quot;sizes&quot;: &quot;192x192&quot;,
+    &quot;type&quot;: &quot;image/svg+xml&quot;
+  }]
+}">
 <title>성적 계산기</title>
 
 <style>
@@ -33,8 +51,65 @@ body {
   background:var(--bg);
   color:var(--fg);
   padding:30px 20px 60px;
+  padding-top: max(30px, env(safe-area-inset-top));
+  padding-bottom: max(60px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
   max-width:550px;
   margin:auto;
+  min-height: 100vh;
+}
+
+.install-banner {
+  display: none;
+  background: linear-gradient(135deg, var(--primary), #5856d6);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.install-banner.show {
+  display: flex;
+}
+
+.install-text {
+  flex: 1;
+}
+
+.install-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.install-desc {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.install-btn {
+  padding: 8px 14px;
+  background: white;
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.install-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+  padding: 0 4px;
 }
 
 .box {
@@ -421,6 +496,17 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
 
 </head>
 <body data-theme="light">
+
+<!-- 앱 설치 배너 -->
+
+<div id="installBanner" class="install-banner">
+  <div class="install-text">
+    <div class="install-title">홈 화면에 추가</div>
+    <div class="install-desc">앱처럼 빠르게 사용하세요</div>
+  </div>
+  <button class="install-btn" onclick="installApp()">설치</button>
+  <button class="install-close" onclick="closeInstallBanner()">×</button>
+</div>
 
 <div class="topbar">
   <div class="titlewrap">
@@ -1273,6 +1359,83 @@ function calculateAvg() {
   document.getElementById("avgResultScore").textContent = average;
   document.getElementById("avgStep2").style.display = "none";
   document.getElementById("avgResult").style.display = "block";
+}
+// ========== PWA 설치 기능 ==========
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+
+function showInstallBanner() {
+  const banner = document.getElementById('installBanner');
+  const dismissed = localStorage.getItem('installBannerDismissed');
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  
+  if (!dismissed && !isStandalone) {
+    banner.classList.add('show');
+  }
+}
+
+function closeInstallBanner() {
+  document.getElementById('installBanner').classList.remove('show');
+  localStorage.setItem('installBannerDismissed', 'true');
+}
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        closeInstallBanner();
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    // iOS Safari
+    alert('홈 화면에 추가하려면:\n\n1. 하단의 공유 버튼(□↑)을 누르세요\n2. "홈 화면에 추가"를 선택하세요');
+    closeInstallBanner();
+  }
+}
+
+// iOS에서도 배너 표시
+window.addEventListener('load', () => {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone;
+  const dismissed = localStorage.getItem('installBannerDismissed');
+  
+  if (isIOS && !isStandalone && !dismissed) {
+    document.getElementById('installBanner').classList.add('show');
+  }
+});
+
+// 서비스 워커 등록 (오프라인 지원)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // 인라인 서비스 워커 생성
+    const swCode = `
+      const CACHE_NAME = 'grade-calc-v1';
+      const urlsToCache = ['/'];
+      
+      self.addEventListener('install', (event) => {
+        self.skipWaiting();
+      });
+      
+      self.addEventListener('fetch', (event) => {
+        event.respondWith(
+          fetch(event.request).catch(() => caches.match(event.request))
+        );
+      });
+    `;
+    
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  });
 }
 </script>
 
