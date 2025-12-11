@@ -48,6 +48,8 @@ body {
 
 .topbar {
   display:flex; justify-content:space-between; align-items:center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 .logo {
   width:50px; height:50px; background:var(--primary);
@@ -55,6 +57,11 @@ body {
   font-weight:800; font-size:22px;
 }
 .titlewrap { display:flex; gap:12px; align-items:center; }
+
+.topbar-buttons {
+  display: flex;
+  gap: 8px;
+}
 
 .entry { margin-bottom:16px; }
 .entry label { font-size:15px; color:#808088; margin-bottom:6px; display:block; }
@@ -76,6 +83,7 @@ body {
   border:1px solid var(--border);
   background:var(--bg);
   cursor:pointer; font-size:14px;
+  color: var(--fg);
 }
 .weight-btn.active {
   background:var(--primary);
@@ -94,12 +102,14 @@ body {
   border-radius:10px; border:none;
   background:var(--primary); color:white;
   font-weight:600;
+  cursor: pointer;
 }
 
 .btn {
   width:100%; height:48px; border:none;
   border-radius:12px; background:var(--primary); color:white;
   font-size:17px; font-weight:700; margin-top:14px;
+  cursor: pointer;
 }
 
 .table-wrap { margin-top:10px; overflow-x:auto; }
@@ -122,10 +132,13 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
 .modal {
   position:fixed; inset:0; background:rgba(0,0,0,0.45);
   display:none; justify-content:center; align-items:center; padding:20px;
+  z-index: 1000;
 }
 .modal-content {
   background:var(--card);
   padding:18px; border-radius:16px; width:100%; max-width:480px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 #result {
@@ -222,6 +235,188 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
 .footer a:hover {
   text-decoration: underline;
 }
+
+.prediction-box {
+  margin-top: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(0,122,255,0.1), rgba(52,199,89,0.1));
+  border-radius: 12px;
+  border: 1px dashed var(--primary);
+}
+
+.prediction-title {
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.theme-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.theme-icon-btn:active {
+  transform: scale(0.9);
+  background: var(--border);
+}
+
+.theme-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--fg);
+}
+
+.avg-calc-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #34c759;
+  background: transparent;
+  color: #34c759;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.avg-calc-btn:hover {
+  background: #34c759;
+  color: white;
+}
+
+/* 평균 계산기 모달 스타일 */
+.avg-modal-content {
+  background: var(--bg);
+  padding: 24px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.avg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avg-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.avg-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  color: var(--fg);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avg-step {
+  margin-bottom: 20px;
+}
+
+.avg-step-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+
+.avg-input {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0 12px;
+  font-size: 16px;
+  background: var(--card);
+  color: var(--fg);
+}
+
+.avg-subjects-container {
+  display: none;
+}
+
+.avg-subject-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.avg-subject-row input {
+  flex: 1;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0 12px;
+  font-size: 15px;
+  background: var(--card);
+  color: var(--fg);
+}
+
+.avg-next-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.avg-result {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(52,199,89,0.15), rgba(0,122,255,0.15));
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.avg-result-score {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.avg-result-label {
+  font-size: 14px;
+  color: #808088;
+  margin-top: 5px;
+}
+
+.avg-subject-list {
+  margin-top: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.avg-subject-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
 </style>
 
 </head>
@@ -235,7 +430,26 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
       <div style="font-size:13px; color:#8c8c91;">더 편하게 계산해요</div>
     </div>
   </div>
-  <button id="themeToggle" class="weight-btn">다크 모드</button>
+  <div class="topbar-buttons">
+    <button class="avg-calc-btn" onclick="openAvgCalc()">평균 계산기</button>
+    <button id="themeToggle" class="theme-icon-btn">
+      <svg class="theme-icon" viewBox="0 0 100 100" fill="currentColor">
+        <!-- 태양 광선 -->
+        <rect x="46" y="5" width="8" height="15" rx="4" />
+        <rect x="46" y="80" width="8" height="15" rx="4" />
+        <rect x="5" y="46" width="15" height="8" rx="4" />
+        <rect x="80" y="46" width="15" height="8" rx="4" />
+        <rect x="17" y="17" width="8" height="15" rx="4" transform="rotate(45 21 24.5)" />
+        <rect x="75" y="68" width="8" height="15" rx="4" transform="rotate(45 79 75.5)" />
+        <rect x="17" y="68" width="8" height="15" rx="4" transform="rotate(-45 21 75.5)" />
+        <rect x="75" y="17" width="8" height="15" rx="4" transform="rotate(-45 79 24.5)" />
+        <!-- 태양 외곽 원 -->
+        <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="8" />
+        <!-- 달 모양 (안쪽) -->
+        <path d="M55 35 Q42 50 55 65 Q65 50 55 35" />
+      </svg>
+    </button>
+  </div>
 </div>
 
 <div class="box">
@@ -255,7 +469,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
     </div>
   </div>
 
-<button class="subject-guide-btn" onclick="openGuide()">과목별 비중 보기</button>
+<button class="subject-guide-btn" onclick="openGuide()">과목별 퍼센트</button>
 
 </div>
 
@@ -322,59 +536,308 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
           <th>과목</th>
           <th>수행평가</th>
           <th>지필평가</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
-        <tr onclick="applySubject('자료구조', 2, 2, [30,30], [20,20])">
-          <td class="guide-subject">자료구조</td>
-          <td>수행1 30%, 수행2 30%</td>
-          <td>중간 20%, 기말 20%</td>
-        </tr>
-        <tr onclick="applySubject('영어', 2, 1, [20,30], [50])">
-          <td class="guide-subject">영어</td>
-          <td>수행1 20%, 수행2 30%</td>
-          <td>기말 50%</td>
-        </tr>
-        <tr onclick="applySubject('기계', 2, 2, [30,30], [20,20])">
-          <td class="guide-subject">기계</td>
-          <td>수행1 30%, 수행2 30%</td>
-          <td>중간 20%, 기말 20%</td>
-        </tr>
-        <tr onclick="applySubject('자동화설비', 2, 2, [30,30], [20,20])">
-          <td class="guide-subject">자동화설비</td>
-          <td>수행1 30%, 수행2 30%</td>
-          <td>중간 20%, 기말 20%</td>
-        </tr>
-        <tr onclick="applySubject('전자회로', 2, 2, [30,30], [20,20])">
-          <td class="guide-subject">전자회로</td>
-          <td>수행1 30%, 수행2 30%</td>
-          <td>중간 20%, 기말 20%</td>
-        </tr>
-        <tr onclick="applySubject('전기회로', 2, 2, [25,25], [20,30])">
-          <td class="guide-subject">전기회로</td>
-          <td>수행1 25%, 수행2 25%</td>
-          <td>중간 20%, 기말 30%</td>
-        </tr>
-        <tr onclick="applySubject('국어', 2, 1, [20,30], [50])">
-          <td class="guide-subject">국어</td>
-          <td>자기소개 20%, 독후감 30%</td>
-          <td>기말 50%</td>
-        </tr>
-        <tr onclick="applySubject('공통사회1', 2, 1, [30,30], [40])">
-          <td class="guide-subject">공통사회1</td>
-          <td>윤리 30%, 사회 30%</td>
-          <td>기말 40%</td>
-        </tr>
+      <tbody id="guideTableBody">
       </tbody>
     </table>
+    <button class="subject-guide-btn" style="margin-top:15px; background:var(--primary); color:white; border:none;" onclick="openAddSubject()">+ 새 과목 추가</button>
+  </div>
+</div>
+
+<!-- 과목 추가 모달 -->
+
+<div id="addSubjectModal" class="modal">
+  <div class="modal-content" style="max-width:400px;">
+    <button style="float:right;" class="info-btn" onclick="closeAddSubject()">닫기</button>
+    <h3 style="margin-bottom:15px;">새 과목 추가</h3>
+
+```
+<div class="entry">
+  <label>과목명</label>
+  <input id="newSubjectName" type="text" placeholder="예: 수학">
+</div>
+
+<div class="entry">
+  <label>수행평가 개수</label>
+  <input id="newSCount" type="number" value="2" min="1" max="5" onchange="generateNewSubjectInputs()">
+</div>
+
+<div id="newSWeightsContainer"></div>
+
+<div class="entry">
+  <label>지필평가 개수</label>
+  <input id="newTCount" type="number" value="2" min="1" max="2" onchange="generateNewSubjectInputs()">
+</div>
+
+<div id="newTWeightsContainer"></div>
+
+<button class="btn" onclick="saveNewSubject()">저장하기</button>
+```
+
+  </div>
+</div>
+
+<!-- 평균 계산기 모달 -->
+
+<div id="avgModal" class="modal">
+  <div class="avg-modal-content">
+    <div class="avg-header">
+      <h2>평균 계산기</h2>
+      <button class="avg-close-btn" onclick="closeAvgCalc()">×</button>
+    </div>
+
+```
+<div class="avg-step" id="avgStep1">
+  <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">과목 개수</label>
+  <input type="number" id="avgSubjectCount" class="avg-input" placeholder="과목 개수를 입력하세요" min="1" max="20" onkeydown="handleAvgCountEnter(event)">
+  <button class="avg-next-btn" onclick="generateAvgSubjects()">다음</button>
+</div>
+
+<div class="avg-subjects-container" id="avgStep2">
+  <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">각 과목 점수 입력</label>
+  <div id="avgSubjectsList"></div>
+  <button class="avg-next-btn" onclick="calculateAvg()">평균 계산하기</button>
+</div>
+
+<div class="avg-result" id="avgResult">
+  <div class="avg-result-label">전체 평균</div>
+  <div class="avg-result-score" id="avgResultScore">0</div>
+  <button class="avg-next-btn" style="margin-top:20px; background:#34c759;" onclick="resetAvgCalc()">다시 계산하기</button>
+</div>
+```
+
   </div>
 </div>
 
 <script>
+// 기본 과목 데이터
+const defaultSubjects = [
+  { name: '자료구조', sCount: 2, tCount: 2, sWeights: [30,30], tWeights: [20,20] },
+  { name: '영어', sCount: 2, tCount: 1, sWeights: [20,30], tWeights: [50] },
+  { name: '기계', sCount: 2, tCount: 2, sWeights: [30,30], tWeights: [20,20] },
+  { name: '자동화설비', sCount: 2, tCount: 2, sWeights: [30,30], tWeights: [20,20] },
+  { name: '전자회로', sCount: 2, tCount: 2, sWeights: [30,30], tWeights: [20,20] },
+  { name: '전기회로', sCount: 2, tCount: 2, sWeights: [25,25], tWeights: [20,30] },
+  { name: '국어', sCount: 2, tCount: 1, sWeights: [20,30], tWeights: [50] },
+  { name: '공통사회1', sCount: 2, tCount: 1, sWeights: [30,30], tWeights: [40] }
+];
+
+function loadSubjects() {
+  const saved = localStorage.getItem('customSubjects');
+  if(saved) {
+    return JSON.parse(saved);
+  }
+  return [...defaultSubjects];
+}
+
+function saveSubjects(subjects) {
+  localStorage.setItem('customSubjects', JSON.stringify(subjects));
+}
+
+function renderGuideTable() {
+  const subjects = loadSubjects();
+  const tbody = document.getElementById('guideTableBody');
+  tbody.innerHTML = '';
+  
+  subjects.forEach((subj, idx) => {
+    const sText = subj.sWeights.map((w, i) => `수행${i+1} ${w}%`).join(', ');
+    const tText = subj.tCount === 1 ? `기말 ${subj.tWeights[0]}%` : `중간 ${subj.tWeights[0]}%, 기말 ${subj.tWeights[1]}%`;
+    
+    tbody.innerHTML += `
+      <tr>
+        <td class="guide-subject" onclick="applySubject('${subj.name}', ${subj.sCount}, ${subj.tCount}, [${subj.sWeights}], [${subj.tWeights}])">${subj.name}</td>
+        <td onclick="applySubject('${subj.name}', ${subj.sCount}, ${subj.tCount}, [${subj.sWeights}], [${subj.tWeights}])">${sText}</td>
+        <td onclick="applySubject('${subj.name}', ${subj.sCount}, ${subj.tCount}, [${subj.sWeights}], [${subj.tWeights}])">${tText}</td>
+        <td><span class="delete-btn" onclick="deleteSubject(${idx})">삭제</span></td>
+      </tr>
+    `;
+  });
+}
+
+function deleteSubject(idx) {
+  if(!confirm('이 과목을 삭제하시겠습니까?')) return;
+  const subjects = loadSubjects();
+  subjects.splice(idx, 1);
+  saveSubjects(subjects);
+  renderGuideTable();
+}
+
+function openAddSubject() {
+  document.getElementById('addSubjectModal').style.display = 'flex';
+  document.getElementById('newSubjectName').value = '';
+  document.getElementById('newSCount').value = 2;
+  document.getElementById('newTCount').value = 2;
+  generateNewSubjectInputs();
+}
+
+function closeAddSubject() {
+  document.getElementById('addSubjectModal').style.display = 'none';
+}
+
+function generateNewSubjectInputs() {
+  const sCount = Number(document.getElementById('newSCount').value);
+  const tCount = Number(document.getElementById('newTCount').value);
+  
+  let sHTML = '';
+  for(let i = 0; i < sCount; i++) {
+    sHTML += `
+      <div class="entry" style="margin-bottom:10px;">
+        <label>수행${i+1} 비중 (%)</label>
+        <input id="newSW${i}" type="number" placeholder="예: 30" min="1" max="100">
+      </div>
+    `;
+  }
+  document.getElementById('newSWeightsContainer').innerHTML = sHTML;
+  
+  let tHTML = '';
+  for(let i = 0; i < tCount; i++) {
+    const lbl = tCount === 1 ? '기말고사' : (i === 0 ? '중간고사' : '기말고사');
+    tHTML += `
+      <div class="entry" style="margin-bottom:10px;">
+        <label>${lbl} 비중 (%)</label>
+        <input id="newTW${i}" type="number" placeholder="예: 20" min="1" max="100">
+      </div>
+    `;
+  }
+  document.getElementById('newTWeightsContainer').innerHTML = tHTML;
+}
+
+function saveNewSubject() {
+  const name = document.getElementById('newSubjectName').value.trim();
+  const sCount = Number(document.getElementById('newSCount').value);
+  const tCount = Number(document.getElementById('newTCount').value);
+  
+  if(!name) {
+    alert('과목명을 입력해주세요.');
+    return;
+  }
+  
+  const sWeights = [];
+  const tWeights = [];
+  let totalWeight = 0;
+  
+  for(let i = 0; i < sCount; i++) {
+    const w = Number(document.getElementById(`newSW${i}`).value);
+    if(!w || w < 1) {
+      alert('모든 비중을 입력해주세요.');
+      return;
+    }
+    sWeights.push(w);
+    totalWeight += w;
+  }
+  
+  for(let i = 0; i < tCount; i++) {
+    const w = Number(document.getElementById(`newTW${i}`).value);
+    if(!w || w < 1) {
+      alert('모든 비중을 입력해주세요.');
+      return;
+    }
+    tWeights.push(w);
+    totalWeight += w;
+  }
+  
+  if(totalWeight !== 100) {
+    alert(`총 비중이 100%가 되어야 합니다. (현재: ${totalWeight}%)`);
+    return;
+  }
+  
+  const subjects = loadSubjects();
+  subjects.push({ name, sCount, tCount, sWeights, tWeights });
+  saveSubjects(subjects);
+  renderGuideTable();
+  closeAddSubject();
+  alert(`${name} 과목이 추가되었습니다!`);
+}
+
+// 입력값 임시 저장 기능
+function saveFormData() {
+  const sCnt = Number(document.getElementById('sCount').value);
+  const tCnt = Number(document.getElementById('tCount').value);
+  
+  const formData = {
+    subjectName: document.getElementById('subjectName').value,
+    sCount: sCnt,
+    tCount: tCnt,
+    sScores: [],
+    sWeights: [],
+    tScores: [],
+    tWeights: []
+  };
+  
+  for(let i = 0; i < sCnt; i++) {
+    const scoreEl = document.getElementById(`s${i}`);
+    const weightEl = document.getElementById(`sw${i}`);
+    if(scoreEl) formData.sScores.push(scoreEl.value);
+    if(weightEl) formData.sWeights.push(weightEl.value);
+  }
+  
+  for(let i = 0; i < tCnt; i++) {
+    const scoreEl = document.getElementById(`t${i}`);
+    const weightEl = document.getElementById(`tw${i}`);
+    if(scoreEl) formData.tScores.push(scoreEl.value);
+    if(weightEl) formData.tWeights.push(weightEl.value);
+  }
+  
+  localStorage.setItem('formData', JSON.stringify(formData));
+}
+
+function loadFormData() {
+  const saved = localStorage.getItem('formData');
+  if(!saved) return;
+  
+  const formData = JSON.parse(saved);
+  
+  document.getElementById('subjectName').value = formData.subjectName || '';
+  document.getElementById('sCount').value = formData.sCount || 2;
+  document.getElementById('tCount').value = formData.tCount || 2;
+  
+  generateInputs();
+  
+  setTimeout(() => {
+    for(let i = 0; i < formData.sScores.length; i++) {
+      const scoreEl = document.getElementById(`s${i}`);
+      const weightEl = document.getElementById(`sw${i}`);
+      if(scoreEl && formData.sScores[i]) scoreEl.value = formData.sScores[i];
+      if(weightEl && formData.sWeights[i]) {
+        weightEl.value = formData.sWeights[i];
+        const btns = weightEl.nextElementSibling?.querySelectorAll('.weight-btn');
+        if(btns) {
+          btns.forEach(btn => {
+            if(btn.textContent.trim() === formData.sWeights[i] + '%') btn.classList.add('active');
+          });
+        }
+      }
+    }
+    
+    for(let i = 0; i < formData.tScores.length; i++) {
+      const scoreEl = document.getElementById(`t${i}`);
+      const weightEl = document.getElementById(`tw${i}`);
+      if(scoreEl && formData.tScores[i]) scoreEl.value = formData.tScores[i];
+      if(weightEl && formData.tWeights[i]) {
+        weightEl.value = formData.tWeights[i];
+        const btns = weightEl.nextElementSibling?.querySelectorAll('.weight-btn');
+        if(btns) {
+          btns.forEach(btn => {
+            if(btn.textContent.trim() === formData.tWeights[i] + '%') btn.classList.add('active');
+          });
+        }
+      }
+    }
+  }, 150);
+}
+
+// 입력값 변경 감지
+document.addEventListener('input', function(e) {
+  if(e.target.tagName === 'INPUT') {
+    saveFormData();
+  }
+});
+
 const themeBtn = document.getElementById("themeToggle");
 function applyTheme(t){
   document.body.dataset.theme = t;
-  themeBtn.textContent = t==="dark" ? "라이트 모드" : "다크 모드";
   localStorage.setItem("theme", t);
 }
 applyTheme(localStorage.getItem("theme") || "light");
@@ -469,10 +932,15 @@ function calculate(){
     wSum += w;
   }
 
+  // 기말고사 점수 및 비중 저장
+  let finalScore = 0;
   for(let i=0;i<tCnt;i++){
     const score = Number(document.getElementById(`t${i}`).value) || 0;
     const w = Number(document.getElementById(`tw${i}`).value) || 0;
-    if(tCnt===1 || i===tCnt-1) finalW = w/100;
+    if(tCnt===1 || i===tCnt-1) {
+      finalW = w/100;
+      finalScore = score;
+    }
     total += score*(w/100);
     wSum += w;
   }
@@ -488,19 +956,38 @@ function calculate(){
   const currCut = {A:90, B:80, C:70, D:60, E:0}[grade];
 
   let nextMsg = "최고 등급!";
-  if(nextCut){
-    const need = (nextCut - (total - (Number(document.getElementById(`t${tCnt-1}`).value)||0)*(finalW))) / finalW;
+  if(total === 100){
+    nextMsg = "만점!";
+  } else if(nextCut){
+    const need = (nextCut - (total - finalScore*finalW)) / finalW;
     nextMsg = need>100 ? "불가능" : `${need.toFixed(2)}점↑`;
   }
 
-  const drop = (currCut - 0.01 - (total - (Number(document.getElementById(`t${tCnt-1}`).value)||0)*finalW)) / finalW;
+  const drop = (currCut - 0.01 - (total - finalScore*finalW)) / finalW;
   const dropMsg = drop<0 ? "떨어질 등급 없음" : `${drop.toFixed(2)}점↓`;
 
+  // 기말고사 100점 가정 시 예상 점수 계산
+  let predictionHTML = "";
+  if(finalScore !== 100) {
+    const totalWithoutFinal = total - finalScore * finalW;
+    const predictedTotal = Number((totalWithoutFinal + 100 * finalW).toFixed(2));
+    const predictedGrade = predictedTotal>=90?"A": predictedTotal>=80?"B": predictedTotal>=70?"C": predictedTotal>=60?"D":"E";
+    
+    predictionHTML = `
+      <div class="prediction-box">
+        <div class="prediction-title">기말고사 100점이면</div>
+        <div>예상 점수: <b>${predictedTotal}</b>점</div>
+        <div>예상 등급: <b class="grade-${predictedGrade}">${predictedGrade}</b></div>
+      </div>
+    `;
+  }
+
   result.innerHTML = `
-    최종 점수: <b>${total}</b>점<br>
-    등급: <b class="grade-${grade}">${grade}</b><br>
+    최종 점수: <b>${total}</b>점${total === 100 ? ' (만점!)' : ''}<br>
+    등급: <b class="grade-${grade}">${grade}</b>${total === 100 ? ' (만점!)' : ''}<br>
     올라갈 기준: ${nextMsg}<br>
     떨어질 기준: ${dropMsg}
+    ${predictionHTML}
   `;
 
   saveHistory({time: nowTime(), subject: subj, final: total, grade: grade, nextMsg, dropMsg});
@@ -577,6 +1064,8 @@ function closeModal(){
 window.onclick = e => {
   if(e.target.id === "detailModal") closeModal();
   if(e.target.id === "guideModal") closeGuide();
+  if(e.target.id === "avgModal") closeAvgCalc();
+  if(e.target.id === "addSubjectModal") closeAddSubject();
 };
 
 function openGuide(){
@@ -624,7 +1113,6 @@ function applySubject(name, sCount, tCount, sWeights, tWeights){
   alert(`${name} 과목의 비중이 자동으로 입력되었습니다!`);
 }
 
-// 별점 시스템
 const stars = document.querySelectorAll('.star');
 const ratingResult = document.getElementById('ratingResult');
 
@@ -690,7 +1178,102 @@ window.addEventListener('load', function() {
     ratingResult.textContent = `평가해 주셔서 감사합니다! (${saved}점)`;
     ratingResult.style.color = '#34c759';
   }
+  
+  // 과목 테이블 렌더링
+  renderGuideTable();
+  
+  // 저장된 입력값 불러오기
+  loadFormData();
 });
+
+// ========== 평균 계산기 기능 ==========
+
+function openAvgCalc() {
+  document.getElementById("avgModal").style.display = "flex";
+  resetAvgCalc();
+}
+
+function closeAvgCalc() {
+  document.getElementById("avgModal").style.display = "none";
+}
+
+function resetAvgCalc() {
+  document.getElementById("avgStep1").style.display = "block";
+  document.getElementById("avgStep2").style.display = "none";
+  document.getElementById("avgResult").style.display = "none";
+  document.getElementById("avgSubjectCount").value = "";
+  document.getElementById("avgSubjectsList").innerHTML = "";
+}
+
+function handleAvgCountEnter(event) {
+  if(event.key === "Enter") {
+    event.preventDefault();
+    generateAvgSubjects();
+  }
+}
+
+function handleScoreEnter(event, index, total) {
+  if(event.key === "Enter") {
+    event.preventDefault();
+    if(index < total - 1) {
+      document.getElementById(`avgScore${index + 1}`).focus();
+    } else {
+      calculateAvg();
+    }
+  }
+}
+
+function generateAvgSubjects() {
+  const count = Number(document.getElementById("avgSubjectCount").value);
+  
+  if(!count || count < 1 || count > 20) {
+    alert("1~20 사이의 과목 개수를 입력해주세요.");
+    return;
+  }
+  
+  let html = "";
+  for(let i = 0; i < count; i++) {
+    html += `
+      <div class="avg-subject-row">
+        <input type="number" class="subject-score" id="avgScore${i}" placeholder="점수 ${i+1}" min="0" max="100" onkeydown="handleScoreEnter(event, ${i}, ${count})">
+      </div>
+    `;
+  }
+  
+  document.getElementById("avgSubjectsList").innerHTML = html;
+  document.getElementById("avgStep1").style.display = "none";
+  document.getElementById("avgStep2").style.display = "block";
+  
+  setTimeout(() => {
+    document.getElementById("avgScore0").focus();
+  }, 100);
+}
+
+function calculateAvg() {
+  const count = Number(document.getElementById("avgSubjectCount").value);
+  let totalScore = 0;
+  let validCount = 0;
+  
+  for(let i = 0; i < count; i++) {
+    const score = Number(document.getElementById(`avgScore${i}`).value);
+    
+    if(!isNaN(score) && score >= 0) {
+      totalScore += score;
+      validCount++;
+    }
+  }
+  
+  if(validCount === 0) {
+    alert("최소 1개 이상의 점수를 입력해주세요.");
+    return;
+  }
+  
+  const average = (totalScore / validCount).toFixed(2);
+  
+  document.getElementById("avgResultScore").textContent = average;
+  document.getElementById("avgStep2").style.display = "none";
+  document.getElementById("avgResult").style.display = "block";
+}
 </script>
 
 </body>
