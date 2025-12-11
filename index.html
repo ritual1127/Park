@@ -8,20 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="성적계산기">
 <meta name="theme-color" content="#007aff">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23007aff' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-weight='bold'>성</text></svg>">
-<link rel="manifest" href="data:application/json,{
-  &quot;name&quot;: &quot;성적 계산기&quot;,
-  &quot;short_name&quot;: &quot;성적계산기&quot;,
-  &quot;start_url&quot;: &quot;.&quot;,
-  &quot;display&quot;: &quot;standalone&quot;,
-  &quot;background_color&quot;: &quot;%23f4f5f7&quot;,
-  &quot;theme_color&quot;: &quot;%23007aff&quot;,
-  &quot;icons&quot;: [{
-    &quot;src&quot;: &quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23007aff' width='100' height='100' rx='20'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-weight='bold'>성</text></svg>&quot;,
-    &quot;sizes&quot;: &quot;192x192&quot;,
-    &quot;type&quot;: &quot;image/svg+xml&quot;
-  }]
-}">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
 <title>성적 계산기</title>
 
 <style>
@@ -837,89 +825,7 @@ function saveNewSubject() {
   alert(`${name} 과목이 추가되었습니다!`);
 }
 
-// 입력값 임시 저장 기능
-function saveFormData() {
-  const sCnt = Number(document.getElementById('sCount').value);
-  const tCnt = Number(document.getElementById('tCount').value);
-  
-  const formData = {
-    subjectName: document.getElementById('subjectName').value,
-    sCount: sCnt,
-    tCount: tCnt,
-    sScores: [],
-    sWeights: [],
-    tScores: [],
-    tWeights: []
-  };
-  
-  for(let i = 0; i < sCnt; i++) {
-    const scoreEl = document.getElementById(`s${i}`);
-    const weightEl = document.getElementById(`sw${i}`);
-    if(scoreEl) formData.sScores.push(scoreEl.value);
-    if(weightEl) formData.sWeights.push(weightEl.value);
-  }
-  
-  for(let i = 0; i < tCnt; i++) {
-    const scoreEl = document.getElementById(`t${i}`);
-    const weightEl = document.getElementById(`tw${i}`);
-    if(scoreEl) formData.tScores.push(scoreEl.value);
-    if(weightEl) formData.tWeights.push(weightEl.value);
-  }
-  
-  localStorage.setItem('formData', JSON.stringify(formData));
-}
-
-function loadFormData() {
-  const saved = localStorage.getItem('formData');
-  if(!saved) return;
-  
-  const formData = JSON.parse(saved);
-  
-  document.getElementById('subjectName').value = formData.subjectName || '';
-  document.getElementById('sCount').value = formData.sCount || 2;
-  document.getElementById('tCount').value = formData.tCount || 2;
-  
-  generateInputs();
-  
-  setTimeout(() => {
-    for(let i = 0; i < formData.sScores.length; i++) {
-      const scoreEl = document.getElementById(`s${i}`);
-      const weightEl = document.getElementById(`sw${i}`);
-      if(scoreEl && formData.sScores[i]) scoreEl.value = formData.sScores[i];
-      if(weightEl && formData.sWeights[i]) {
-        weightEl.value = formData.sWeights[i];
-        const btns = weightEl.nextElementSibling?.querySelectorAll('.weight-btn');
-        if(btns) {
-          btns.forEach(btn => {
-            if(btn.textContent.trim() === formData.sWeights[i] + '%') btn.classList.add('active');
-          });
-        }
-      }
-    }
-    
-    for(let i = 0; i < formData.tScores.length; i++) {
-      const scoreEl = document.getElementById(`t${i}`);
-      const weightEl = document.getElementById(`tw${i}`);
-      if(scoreEl && formData.tScores[i]) scoreEl.value = formData.tScores[i];
-      if(weightEl && formData.tWeights[i]) {
-        weightEl.value = formData.tWeights[i];
-        const btns = weightEl.nextElementSibling?.querySelectorAll('.weight-btn');
-        if(btns) {
-          btns.forEach(btn => {
-            if(btn.textContent.trim() === formData.tWeights[i] + '%') btn.classList.add('active');
-          });
-        }
-      }
-    }
-  }, 150);
-}
-
-// 입력값 변경 감지
-document.addEventListener('input', function(e) {
-  if(e.target.tagName === 'INPUT') {
-    saveFormData();
-  }
-});
+// 입력값 변경 감지 제거됨
 
 const themeBtn = document.getElementById("themeToggle");
 function applyTheme(t){
@@ -1032,7 +938,7 @@ function calculate(){
   }
 
   if(wSum !== 100){
-    result.innerHTML = `⚠ 총 비중이 100%가 아닙니다. (${wSum}%)`;
+    result.innerHTML = `총 비중이 100%가 아닙니다. (${wSum}%)`;
     return;
   }
 
@@ -1242,15 +1148,8 @@ function clearStars() {
   });
 }
 
-async function saveRating(val) {
-  try {
-    const ts = new Date().toISOString();
-    const data = {value: Number(val), timestamp: ts};
-    await window.storage.set(`rating:${ts}`, JSON.stringify(data), true);
-    localStorage.setItem('userRating', val);
-  } catch (e) {
-    console.log('별점 저장 오류:', e);
-  }
+function saveRating(val) {
+  localStorage.setItem('userRating', val);
 }
 
 function getRating() {
@@ -1267,9 +1166,6 @@ window.addEventListener('load', function() {
   
   // 과목 테이블 렌더링
   renderGuideTable();
-  
-  // 저장된 입력값 불러오기
-  loadFormData();
 });
 
 // ========== 평균 계산기 기능 ==========
@@ -1360,6 +1256,7 @@ function calculateAvg() {
   document.getElementById("avgStep2").style.display = "none";
   document.getElementById("avgResult").style.display = "block";
 }
+
 // ========== PWA 설치 기능 ==========
 
 let deferredPrompt;
@@ -1396,7 +1293,7 @@ function installApp() {
     });
   } else {
     // iOS Safari
-    alert('홈 화면에 추가하려면:\n\n1. 하단의 공유 버튼(□↑)을 누르세요\n2. "홈 화면에 추가"를 선택하세요');
+    alert('홈 화면에 추가하려면:\n\n1. 하단의 공유 버튼을 누르세요\n2. "홈 화면에 추가"를 선택하세요');
     closeInstallBanner();
   }
 }
@@ -1412,29 +1309,10 @@ window.addEventListener('load', () => {
   }
 });
 
-// 서비스 워커 등록 (오프라인 지원)
+// 서비스 워커 등록
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // 인라인 서비스 워커 생성
-    const swCode = `
-      const CACHE_NAME = 'grade-calc-v1';
-      const urlsToCache = ['/'];
-      
-      self.addEventListener('install', (event) => {
-        self.skipWaiting();
-      });
-      
-      self.addEventListener('fetch', (event) => {
-        event.respondWith(
-          fetch(event.request).catch(() => caches.match(event.request))
-        );
-      });
-    `;
-    
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    
-    navigator.serviceWorker.register(swUrl).catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
 </script>
