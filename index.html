@@ -15,6 +15,7 @@
   --card:#ffffffcc;
   --border:#d0d6db;
   --primary:#007aff;
+  --footer-text:#8c8c91;
 }
 
 [data-theme="dark"] {
@@ -23,6 +24,7 @@
   --card:#1c1c1ecc;
   --border:#333;
   --primary:#0a84ff;
+  --footer-text:#6e6e73;
 }
 
 body {
@@ -140,6 +142,13 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   text-align:center; line-height:1.6; font-size:17px;
 }
 
+/* 등급 색상 */
+.grade-A { color: #34c759; font-weight: 700; }
+.grade-B { color: #30d158; font-weight: 700; }
+.grade-C { color: #ff9f0a; font-weight: 700; }
+.grade-D { color: #ff9500; font-weight: 700; }
+.grade-E { color: #ff3b30; font-weight: 700; }
+
 /* ✅ 수행평가/지필평가 개수 가로 배치 추가 */
 .count-row {
   display:flex;
@@ -147,6 +156,67 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
 }
 .count-row .entry {
   flex:1;
+}
+
+/* ✅ 과목별 비중 안내 */
+.subject-guide-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+.subject-guide-btn:hover {
+  background: var(--card);
+}
+
+.guide-table {
+  width: 100%;
+  margin-top: 15px;
+  font-size: 14px;
+}
+.guide-table th {
+  background: var(--bg);
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+.guide-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.guide-table tr:hover td {
+  background: var(--bg);
+  cursor: pointer;
+}
+.guide-subject {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* ✅ 푸터 스타일 */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px 0;
+  font-size: 13px;
+  color: var(--footer-text);
+  font-weight: 500;
+  line-height: 1.8;
+}
+.footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.footer a:hover {
+  text-decoration: underline;
 }
 </style>
 
@@ -187,6 +257,9 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
     </div>
   </div>
 
+  <!-- ✅ 과목별 비중 안내 버튼 -->
+  <button class="subject-guide-btn" onclick="openGuide()">과목별 비중 보기</button>
+
 </div>
 
 
@@ -224,12 +297,79 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   </div>
 </div>
 
+<!-- ✅ 푸터 추가 -->
+<div class="footer">
+  made by gpt + ritual<br>
+  <a href="https://www.instagram.com/hole_112?igsh=MWg4MnBramo5Zjlh" target="_blank">@hole_112</a>
+</div>
+
 
 <!-- 정보 모달 -->
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <button style="float:right;" class="info-btn" onclick="closeModal()">닫기</button>
     <div id="modalInner"></div>
+  </div>
+</div>
+
+<!-- ✅ 과목별 비중 안내 모달 -->
+<div id="guideModal" class="modal">
+  <div class="modal-content">
+    <button style="float:right;" class="info-btn" onclick="closeGuide()">닫기</button>
+    <h3 style="margin-bottom:15px;">📚 과목별 비중 안내</h3>
+    <p style="font-size:13px; color:#808088; margin-bottom:10px;">과목명을 클릭하면 자동으로 입력됩니다</p>
+    
+    <table class="guide-table">
+      <thead>
+        <tr>
+          <th>과목</th>
+          <th>수행평가</th>
+          <th>지필평가</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr onclick="applySubject('자료구조', 2, 2, [30,30], [20,20])">
+          <td class="guide-subject">자료구조</td>
+          <td>수행1 30%, 수행2 30%</td>
+          <td>중간 20%, 기말 20%</td>
+        </tr>
+        <tr onclick="applySubject('영어', 2, 1, [20,30], [50])">
+          <td class="guide-subject">영어</td>
+          <td>수행1 20%, 수행2 30%</td>
+          <td>기말 50%</td>
+        </tr>
+        <tr onclick="applySubject('기계', 2, 2, [30,30], [20,20])">
+          <td class="guide-subject">기계</td>
+          <td>수행1 30%, 수행2 30%</td>
+          <td>중간 20%, 기말 20%</td>
+        </tr>
+        <tr onclick="applySubject('자동화설비', 2, 2, [30,30], [20,20])">
+          <td class="guide-subject">자동화설비</td>
+          <td>수행1 30%, 수행2 30%</td>
+          <td>중간 20%, 기말 20%</td>
+        </tr>
+        <tr onclick="applySubject('전자회로', 2, 2, [30,30], [20,20])">
+          <td class="guide-subject">전자회로</td>
+          <td>수행1 30%, 수행2 30%</td>
+          <td>중간 20%, 기말 20%</td>
+        </tr>
+        <tr onclick="applySubject('전기회로', 2, 2, [25,25], [20,30])">
+          <td class="guide-subject">전기회로</td>
+          <td>수행1 25%, 수행2 25%</td>
+          <td>중간 20%, 기말 30%</td>
+        </tr>
+        <tr onclick="applySubject('국어', 2, 1, [20,30], [50])">
+          <td class="guide-subject">국어</td>
+          <td>자기소개 20%, 독후감 30%</td>
+          <td>기말 50%</td>
+        </tr>
+        <tr onclick="applySubject('공통사회1', 2, 1, [30,30], [40])">
+          <td class="guide-subject">공통사회1</td>
+          <td>윤리 30%, 사회 30%</td>
+          <td>기말 40%</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -392,7 +532,7 @@ function calculate(){
 
   result.innerHTML = `
     최종 점수: <b>${total}</b>점<br>
-    등급: <b>${grade}</b><br>
+    등급: <b class="grade-${grade}">${grade}</b><br>
     올라갈 기준: ${nextMsg}<br>
     떨어질 기준: ${dropMsg}
   `;
@@ -439,7 +579,7 @@ function renderHistory(){
         <td>${e.time}</td>
         <td class="subject">${e.subject}</td>
         <td>${e.final}</td>
-        <td><b>${e.grade}</b></td>
+        <td><b class="grade-${e.grade}">${e.grade}</b></td>
         <td>${e.nextMsg}</td>
         <td>${e.dropMsg}</td>
         <td><span class="delete-btn" onclick="deleteHistory(${i})">삭제</span></td>
@@ -466,7 +606,7 @@ function openInfo(i){
   inner.innerHTML = `
     <h3>${e.subject}</h3>
     <p style="margin-top:10px;">최종점수: <b>${e.final}</b></p>
-    <p>등급: <b>${e.grade}</b></p>
+    <p>등급: <b class="grade-${e.grade}">${e.grade}</b></p>
     <p>올라갈 기준: ${e.nextMsg}</p>
     <p>떨어질 기준: ${e.dropMsg}</p>
   `;
@@ -479,7 +619,62 @@ function closeModal(){
 
 window.onclick = e => {
   if(e.target.id === "detailModal") closeModal();
+  if(e.target.id === "guideModal") closeGuide();
 };
+
+/* ===== 과목별 비중 안내 ===== */
+function openGuide(){
+  document.getElementById("guideModal").style.display="flex";
+}
+function closeGuide(){
+  document.getElementById("guideModal").style.display="none";
+}
+
+function applySubject(name, sCount, tCount, sWeights, tWeights){
+  // 과목명 입력
+  document.getElementById("subjectName").value = name;
+  
+  // 개수 설정
+  document.getElementById("sCount").value = sCount;
+  document.getElementById("tCount").value = tCount;
+  
+  // 입력 필드 재생성
+  generateInputs();
+  
+  // 비중 자동 입력
+  setTimeout(() => {
+    for(let i=0; i<sCount; i++){
+      const input = document.getElementById(`sw${i}`);
+      if(input) {
+        input.value = sWeights[i];
+        // 버튼 활성화
+        const btns = input.nextElementSibling.querySelectorAll(".weight-btn");
+        btns.forEach(btn => {
+          if(btn.textContent.trim() === sWeights[i] + "%"){
+            btn.classList.add("active");
+          }
+        });
+      }
+    }
+    
+    for(let i=0; i<tCount; i++){
+      const input = document.getElementById(`tw${i}`);
+      if(input) {
+        input.value = tWeights[i];
+        // 버튼 활성화
+        const btns = input.nextElementSibling.querySelectorAll(".weight-btn");
+        btns.forEach(btn => {
+          if(btn.textContent.trim() === tWeights[i] + "%"){
+            btn.classList.add("active");
+          }
+        });
+      }
+    }
+  }, 100);
+  
+  closeGuide();
+  alert(`${name} 과목의 비중이 자동으로 입력되었습니다!`);
+}
 
 </script>
 </body>
