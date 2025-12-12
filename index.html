@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
@@ -10,10 +9,9 @@
 <meta name="theme-color" content="#007aff">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
-<title>성적 계산기</title>
+<title>성적 계산기 with 급식</title>
 
 <style>
-/* ---- 기본 스타일 ---- */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
@@ -23,6 +21,9 @@
   --border:#d0d6db;
   --primary:#007aff;
   --footer-text:#8c8c91;
+  --meal-breakfast:#ff9500;
+  --meal-lunch:#34c759;
+  --meal-dinner:#5856d6;
 }
 
 [data-theme="dark"] {
@@ -107,6 +108,173 @@ body {
   padding:18px;
   backdrop-filter:blur(18px);
   margin-top:20px;
+}
+
+.meal-box {
+  background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), rgba(0, 122, 255, 0.1));
+  border: 2px solid var(--meal-lunch);
+  position: relative;
+  overflow: hidden;
+}
+
+.meal-box::before {
+  content: '🍴';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 80px;
+  opacity: 0.1;
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.meal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--meal-lunch);
+}
+
+.meal-date {
+  font-size: 13px;
+  color: #808088;
+}
+
+.meal-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.meal-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.meal-tab.active {
+  background: var(--meal-lunch);
+  color: white;
+  border-color: var(--meal-lunch);
+}
+
+.meal-tab.breakfast.active {
+  background: var(--meal-breakfast);
+  border-color: var(--meal-breakfast);
+}
+
+.meal-tab.dinner.active {
+  background: var(--meal-dinner);
+  border-color: var(--meal-dinner);
+}
+
+.meal-content {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+  min-height: 120px;
+}
+
+.meal-menu {
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.meal-menu-item {
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.meal-menu-item:last-child {
+  border-bottom: none;
+}
+
+.meal-loading {
+  text-align: center;
+  padding: 30px;
+  color: #808088;
+}
+
+.meal-empty {
+  text-align: center;
+  padding: 30px;
+  color: #808088;
+}
+
+.meal-settings-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--meal-lunch);
+  background: transparent;
+  color: var(--meal-lunch);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notification-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.notification-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  background: #ccc;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.switch.on {
+  background: var(--meal-lunch);
+}
+
+.switch-knob {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.switch.on .switch-knob {
+  left: 24px;
+}
+
+.meal-allergy {
+  font-size: 12px;
+  color: #ff3b30;
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 8px;
 }
 
 .topbar {
@@ -202,6 +370,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   padding:18px; border-radius:16px; width:100%; max-width:480px;
   max-height: 90vh;
   overflow-y: auto;
+  backdrop-filter:blur(18px);
 }
 
 #result {
@@ -353,7 +522,6 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   color: white;
 }
 
-/* 평균 계산기 모달 스타일 */
 .avg-modal-content {
   background: var(--bg);
   padding: 24px;
@@ -480,12 +648,77 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
 }
+
+.school-search-container {
+  margin-bottom: 15px;
+}
+
+.school-search-input {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 0 12px;
+  font-size: 16px;
+  background: var(--card);
+  color: var(--fg);
+  margin-bottom: 10px;
+}
+
+.school-results {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.school-item {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.school-item:hover {
+  background: var(--bg);
+}
+
+.school-item:last-child {
+  border-bottom: none;
+}
+
+.school-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.school-address {
+  font-size: 12px;
+  color: #808088;
+}
+
+.current-school {
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.current-school-label {
+  font-size: 12px;
+  color: #808088;
+  margin-bottom: 4px;
+}
+
+.current-school-name {
+  font-weight: 600;
+  font-size: 15px;
+}
 </style>
 
 </head>
 <body data-theme="light">
-
-<!-- 앱 설치 배너 -->
 
 <div id="installBanner" class="install-banner">
   <div class="install-text">
@@ -508,7 +741,6 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
     <button class="avg-calc-btn" onclick="openAvgCalc()">평균 계산기</button>
     <button id="themeToggle" class="theme-icon-btn">
       <svg class="theme-icon" viewBox="0 0 100 100" fill="currentColor">
-        <!-- 태양 광선 -->
         <rect x="46" y="5" width="8" height="15" rx="4" />
         <rect x="46" y="80" width="8" height="15" rx="4" />
         <rect x="5" y="46" width="15" height="8" rx="4" />
@@ -517,12 +749,37 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
         <rect x="75" y="68" width="8" height="15" rx="4" transform="rotate(45 79 75.5)" />
         <rect x="17" y="68" width="8" height="15" rx="4" transform="rotate(-45 21 75.5)" />
         <rect x="75" y="17" width="8" height="15" rx="4" transform="rotate(-45 79 24.5)" />
-        <!-- 태양 외곽 원 -->
         <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="8" />
-        <!-- 달 모양 (안쪽) -->
         <path d="M55 35 Q42 50 55 65 Q65 50 55 35" />
       </svg>
     </button>
+  </div>
+</div>
+
+<div class="box meal-box">
+  <div class="meal-header">
+    <div>
+      <div class="meal-title">🍽️ 오늘의 급식</div>
+      <div class="meal-date" id="mealDate"></div>
+    </div>
+    <button class="meal-settings-btn" onclick="openMealSettings()">⚙️ 설정</button>
+  </div>
+  
+  <div class="meal-type-tabs">
+    <div class="meal-tab breakfast" onclick="changeMealType('breakfast')">조식</div>
+    <div class="meal-tab lunch active" onclick="changeMealType('lunch')">중식</div>
+    <div class="meal-tab dinner" onclick="changeMealType('dinner')">석식</div>
+  </div>
+  
+  <div class="meal-content" id="mealContent">
+    <div class="meal-loading">급식 정보를 불러오는 중...</div>
+  </div>
+  
+  <div class="notification-toggle">
+    <span class="notification-label">📢 급식 시간 알림</span>
+    <div class="switch" id="notificationSwitch" onclick="toggleNotification()">
+      <div class="switch-knob"></div>
+    </div>
   </div>
 </div>
 
@@ -543,8 +800,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
     </div>
   </div>
 
-<button class="subject-guide-btn" onclick="openGuide()">과목별 퍼센트</button>
-
+  <button class="subject-guide-btn" onclick="openGuide()">과목별 퍼센트</button>
 </div>
 
 <div id="performBox" class="box"></div>
@@ -592,6 +848,40 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
   </div>
 </div>
 
+<div id="mealSettingsModal" class="modal">
+  <div class="modal-content">
+    <button style="float:right;" class="info-btn" onclick="closeMealSettings()">닫기</button>
+    <h3 style="margin-bottom:15px;">급식 설정</h3>
+    
+    <div class="current-school" id="currentSchoolDisplay">
+      <div class="current-school-label">현재 설정된 학교</div>
+      <div class="current-school-name">학교를 검색해주세요</div>
+    </div>
+    
+    <div class="school-search-container">
+      <input type="text" class="school-search-input" id="schoolSearch" placeholder="학교 이름을 입력하세요" onkeyup="searchSchool()" />
+      <div class="school-results" id="schoolResults"></div>
+    </div>
+    
+    <div class="entry">
+      <label>조식 알림 시간</label>
+      <input type="time" id="breakfastTime" class="avg-input" value="08:00">
+    </div>
+    
+    <div class="entry">
+      <label>중식 알림 시간</label>
+      <input type="time" id="lunchTime" class="avg-input" value="12:30">
+    </div>
+    
+    <div class="entry">
+      <label>석식 알림 시간</label>
+      <input type="time" id="dinnerTime" class="avg-input" value="18:00">
+    </div>
+    
+    <button class="btn" onclick="saveMealSettings()">저장하기</button>
+  </div>
+</div>
+
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <button style="float:right;" class="info-btn" onclick="closeModal()">닫기</button>
@@ -613,47 +903,33 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
           <th></th>
         </tr>
       </thead>
-      <tbody id="guideTableBody">
-      </tbody>
+      <tbody id="guideTableBody"></tbody>
     </table>
     <button class="subject-guide-btn" style="margin-top:15px; background:var(--primary); color:white; border:none;" onclick="openAddSubject()">+ 새 과목 추가</button>
   </div>
 </div>
 
-<!-- 과목 추가 모달 -->
-
 <div id="addSubjectModal" class="modal">
   <div class="modal-content" style="max-width:400px;">
     <button style="float:right;" class="info-btn" onclick="closeAddSubject()">닫기</button>
     <h3 style="margin-bottom:15px;">새 과목 추가</h3>
-
-```
-<div class="entry">
-  <label>과목명</label>
-  <input id="newSubjectName" type="text" placeholder="예: 수학">
-</div>
-
-<div class="entry">
-  <label>수행평가 개수</label>
-  <input id="newSCount" type="number" value="2" min="1" max="5" onchange="generateNewSubjectInputs()">
-</div>
-
-<div id="newSWeightsContainer"></div>
-
-<div class="entry">
-  <label>지필평가 개수</label>
-  <input id="newTCount" type="number" value="2" min="1" max="2" onchange="generateNewSubjectInputs()">
-</div>
-
-<div id="newTWeightsContainer"></div>
-
-<button class="btn" onclick="saveNewSubject()">저장하기</button>
-```
-
+    <div class="entry">
+      <label>과목명</label>
+      <input id="newSubjectName" type="text" placeholder="예: 수학">
+    </div>
+    <div class="entry">
+      <label>수행평가 개수</label>
+      <input id="newSCount" type="number" value="2" min="1" max="5" onchange="generateNewSubjectInputs()">
+    </div>
+    <div id="newSWeightsContainer"></div>
+    <div class="entry">
+      <label>지필평가 개수</label>
+      <input id="newTCount" type="number" value="2" min="1" max="2" onchange="generateNewSubjectInputs()">
+    </div>
+    <div id="newTWeightsContainer"></div>
+    <button class="btn" onclick="saveNewSubject()">저장하기</button>
   </div>
 </div>
-
-<!-- 평균 계산기 모달 -->
 
 <div id="avgModal" class="modal">
   <div class="avg-modal-content">
@@ -661,32 +937,347 @@ tr:nth-child(even) td { background:rgba(255,255,255,0.05); }
       <h2>평균 계산기</h2>
       <button class="avg-close-btn" onclick="closeAvgCalc()">×</button>
     </div>
-
-```
-<div class="avg-step" id="avgStep1">
-  <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">과목 개수</label>
-  <input type="number" id="avgSubjectCount" class="avg-input" placeholder="과목 개수를 입력하세요" min="1" max="20" onkeydown="handleAvgCountEnter(event)">
-  <button class="avg-next-btn" onclick="generateAvgSubjects()">다음</button>
-</div>
-
-<div class="avg-subjects-container" id="avgStep2">
-  <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">각 과목 점수 입력</label>
-  <div id="avgSubjectsList"></div>
-  <button class="avg-next-btn" onclick="calculateAvg()">평균 계산하기</button>
-</div>
-
-<div class="avg-result" id="avgResult">
-  <div class="avg-result-label">전체 평균</div>
-  <div class="avg-result-score" id="avgResultScore">0</div>
-  <button class="avg-next-btn" style="margin-top:20px; background:#34c759;" onclick="resetAvgCalc()">다시 계산하기</button>
-</div>
-```
-
+    <div class="avg-step" id="avgStep1">
+      <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">과목 개수</label>
+      <input type="number" id="avgSubjectCount" class="avg-input" placeholder="과목 개수를 입력하세요" min="1" max="20" onkeydown="handleAvgCountEnter(event)">
+      <button class="avg-next-btn" onclick="generateAvgSubjects()">다음</button>
+    </div>
+    <div class="avg-subjects-container" id="avgStep2">
+      <label style="font-size:14px; color:#808088; margin-bottom:8px; display:block;">각 과목 점수 입력</label>
+      <div id="avgSubjectsList"></div>
+      <button class="avg-next-btn" onclick="calculateAvg()">평균 계산하기</button>
+    </div>
+    <div class="avg-result" id="avgResult">
+      <div class="avg-result-label">전체 평균</div>
+      <div class="avg-result-score" id="avgResultScore">0</div>
+      <button class="avg-next-btn" style="margin-top:20px; background:#34c759;" onclick="resetAvgCalc()">다시 계산하기</button>
+    </div>
   </div>
 </div>
 
 <script>
-// 기본 과목 데이터
+// ========== NEIS API 설정 ==========
+const MEAL_API_URL = 'https://open.neis.go.kr/hub/mealServiceDietInfo';
+const SCHOOL_API_URL = 'https://open.neis.go.kr/hub/schoolInfo';
+const NEIS_API_KEY = 'b960b906675e4d64a30ef65900737807';
+
+let currentMealType = 'lunch';
+
+// ========== 급식 관련 함수 ==========
+
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}${month}${day}`;
+}
+
+function loadMealDate() {
+  const today = new Date();
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')} (${days[today.getDay()]})`;
+  document.getElementById('mealDate').textContent = dateStr;
+}
+
+function removeAllergyInfo(menuItem) {
+  return menuItem
+    .replace(/\([0-9.,\s]+\)/g, '')
+    .replace(/[0-9.,\s]+$/g, '')
+    .trim();
+}
+
+async function searchSchoolFromNEIS(schoolName) {
+  try {
+    const params = new URLSearchParams({
+      KEY: NEIS_API_KEY,
+      Type: 'json',
+      pIndex: 1,
+      pSize: 10,
+      SCHUL_NM: schoolName
+    });
+
+    const response = await fetch(`${SCHOOL_API_URL}?${params}`);
+    const data = await response.json();
+
+    if (!data.schoolInfo || data.schoolInfo[0].head[0].RESULT.CODE !== 'INFO-000') {
+      return [];
+    }
+
+    return data.schoolInfo[1].row.map(school => ({
+      code: school.SD_SCHUL_CODE,
+      name: school.SCHUL_NM,
+      address: school.ORG_RDNMA,
+      officeCode: school.ATPT_OFCDC_SC_CODE,
+      schoolType: school.SCHUL_KND_SC_NM
+    }));
+
+  } catch (error) {
+    console.error('학교 검색 오류:', error);
+    return [];
+  }
+}
+
+async function getMealFromNEIS(officeCode, schoolCode, date) {
+  try {
+    const params = new URLSearchParams({
+      KEY: NEIS_API_KEY,
+      Type: 'json',
+      pIndex: 1,
+      pSize: 100,
+      ATPT_OFCDC_SC_CODE: officeCode,
+      SD_SCHUL_CODE: schoolCode,
+      MLSV_YMD: date
+    });
+
+    const response = await fetch(`${MEAL_API_URL}?${params}`);
+    const data = await response.json();
+
+    if (!data.mealServiceDietInfo || data.mealServiceDietInfo[0].head[0].RESULT.CODE !== 'INFO-000') {
+      return { breakfast: null, lunch: null, dinner: null };
+    }
+
+    const meals = data.mealServiceDietInfo[1].row;
+    const result = { breakfast: null, lunch: null, dinner: null };
+
+    meals.forEach(meal => {
+      const menuItems = meal.DDISH_NM
+        .split('<br/>')
+        .map(item => removeAllergyInfo(item.trim()))
+        .filter(item => item.length > 0);
+
+      const mealType = meal.MMEAL_SC_NM;
+
+      if (mealType === '조식') result.breakfast = menuItems;
+      else if (mealType === '중식') result.lunch = menuItems;
+      else if (mealType === '석식') result.dinner = menuItems;
+    });
+
+    return result;
+
+  } catch (error) {
+    console.error('급식 조회 오류:', error);
+    return { breakfast: null, lunch: null, dinner: null };
+  }
+}
+
+function changeMealType(type) {
+  currentMealType = type;
+  document.querySelectorAll('.meal-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelector(`.meal-tab.${type}`).classList.add('active');
+  loadMealData();
+}
+
+async function loadMealData() {
+  const school = JSON.parse(localStorage.getItem('selectedSchool') || 'null');
+  const mealContent = document.getElementById('mealContent');
+  
+  if (!school) {
+    mealContent.innerHTML = '<div class="meal-empty">⚙️ 설정에서 학교를 선택해주세요</div>';
+    return;
+  }
+  
+  mealContent.innerHTML = '<div class="meal-loading">급식 정보를 불러오는 중...</div>';
+  
+  try {
+    const todayDate = getTodayDate();
+    const meals = await getMealFromNEIS(school.officeCode, school.code, todayDate);
+    
+    const mealTypeMap = {
+      'breakfast': meals.breakfast,
+      'lunch': meals.lunch,
+      'dinner': meals.dinner
+    };
+    
+    displayMealMenu(mealTypeMap[currentMealType]);
+    
+  } catch (error) {
+    console.error('급식 로드 오류:', error);
+    mealContent.innerHTML = '<div class="meal-empty">급식 정보를 불러올 수 없습니다</div>';
+  }
+}
+
+function displayMealMenu(menuItems) {
+  const mealContent = document.getElementById('mealContent');
+  
+  if (!menuItems || menuItems.length === 0) {
+    mealContent.innerHTML = '<div class="meal-empty">급식 정보가 없습니다</div>';
+    return;
+  }
+  
+  let html = '<div class="meal-menu">';
+  menuItems.forEach(item => {
+    if (item) {
+      html += `<div class="meal-menu-item">• ${item}</div>`;
+    }
+  });
+  html += '</div>';
+  
+  html += `
+    <div class="meal-allergy">
+      ⚠️ 알레르기 정보는 학교 급식실 또는 담당 선생님께 문의하세요.
+    </div>
+  `;
+  
+  mealContent.innerHTML = html;
+}
+
+async function searchSchool() {
+  const query = document.getElementById('schoolSearch').value.trim();
+  const resultsDiv = document.getElementById('schoolResults');
+  
+  if (query.length < 2) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  resultsDiv.innerHTML = '<div class="meal-loading">검색 중...</div>';
+  
+  const schools = await searchSchoolFromNEIS(query);
+  
+  if (schools.length === 0) {
+    resultsDiv.innerHTML = '<div class="meal-empty">검색 결과가 없습니다</div>';
+    return;
+  }
+  
+  let html = '';
+  schools.forEach(school => {
+    html += `
+      <div class="school-item" onclick='selectSchool(${JSON.stringify(school)})'>
+        <div class="school-name">${school.name} (${school.schoolType})</div>
+        <div class="school-address">${school.address}</div>
+      </div>
+    `;
+  });
+  
+  resultsDiv.innerHTML = html;
+}
+
+function selectSchool(school) {
+  localStorage.setItem('selectedSchool', JSON.stringify(school));
+  document.getElementById('schoolSearch').value = '';
+  document.getElementById('schoolResults').innerHTML = '';
+  loadCurrentSchool();
+  loadMealData();
+  alert(`${school.name}이(가) 선택되었습니다!`);
+}
+
+function loadCurrentSchool() {
+  const school = JSON.parse(localStorage.getItem('selectedSchool') || 'null');
+  const display = document.getElementById('currentSchoolDisplay');
+  
+  if (school) {
+    display.querySelector('.current-school-name').textContent = school.name;
+  } else {
+    display.querySelector('.current-school-name').textContent = '학교를 검색해주세요';
+  }
+}
+
+function openMealSettings() {
+  document.getElementById('mealSettingsModal').style.display = 'flex';
+  loadCurrentSchool();
+  loadNotificationTimes();
+}
+
+function closeMealSettings() {
+  document.getElementById('mealSettingsModal').style.display = 'none';
+}
+
+function loadNotificationTimes() {
+  const times = JSON.parse(localStorage.getItem('mealNotificationTimes') || '{"breakfast":"08:00","lunch":"12:30","dinner":"18:00"}');
+  document.getElementById('breakfastTime').value = times.breakfast;
+  document.getElementById('lunchTime').value = times.lunch;
+  document.getElementById('dinnerTime').value = times.dinner;
+}
+
+function saveMealSettings() {
+  const times = {
+    breakfast: document.getElementById('breakfastTime').value,
+    lunch: document.getElementById('lunchTime').value,
+    dinner: document.getElementById('dinnerTime').value
+  };
+  
+  localStorage.setItem('mealNotificationTimes', JSON.stringify(times));
+  
+  if (localStorage.getItem('mealNotificationEnabled') === 'true') {
+    scheduleMealNotifications();
+  }
+  
+  closeMealSettings();
+  alert('설정이 저장되었습니다!');
+}
+
+function toggleNotification() {
+  const switchEl = document.getElementById('notificationSwitch');
+  const isEnabled = switchEl.classList.contains('on');
+  
+  if (!isEnabled) {
+    requestNotificationPermission();
+  } else {
+    switchEl.classList.remove('on');
+    localStorage.setItem('mealNotificationEnabled', 'false');
+  }
+}
+
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    alert('이 브라우저는 알림을 지원하지 않습니다.');
+    return;
+  }
+  
+  const permission = await Notification.requestPermission();
+  
+  if (permission === 'granted') {
+    document.getElementById('notificationSwitch').classList.add('on');
+    localStorage.setItem('mealNotificationEnabled', 'true');
+    scheduleMealNotifications();
+    alert('급식 알림이 활성화되었습니다!');
+  } else {
+    alert('알림 권한이 거부되었습니다.');
+  }
+}
+
+function scheduleMealNotifications() {
+  setInterval(checkMealTime, 60000);
+}
+
+function checkMealTime() {
+  const now = new Date();
+  const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const times = JSON.parse(localStorage.getItem('mealNotificationTimes') || '{"breakfast":"08:00","lunch":"12:30","dinner":"18:00"}');
+  
+  if (localStorage.getItem('mealNotificationEnabled') !== 'true') return;
+  
+  const mealTypes = { breakfast: '조식', lunch: '중식', dinner: '석식' };
+  
+  Object.entries(times).forEach(([type, time]) => {
+    if (time === currentTime) {
+      showMealNotification(type, mealTypes[type]);
+    }
+  });
+}
+
+async function showMealNotification(type, typeName) {
+  const school = JSON.parse(localStorage.getItem('selectedSchool') || 'null');
+  
+  if (!school) return;
+  
+  const todayDate = getTodayDate();
+  const meals = await getMealFromNEIS(school.officeCode, school.code, todayDate);
+  const menu = meals[type];
+  
+  if ('Notification' in window && Notification.permission === 'granted' && menu && menu.length > 0) {
+    const menuText = menu.slice(0, 3).join(', ') + (menu.length > 3 ? '...' : '');
+    new Notification(`🍽️ ${typeName} 시간입니다!`, {
+      body: `오늘의 메뉴: ${menuText}`,
+      icon: 'icon-192.png',
+      badge: 'icon-192.png'
+    });
+  }
+}
+
+// ========== 성적 계산기 코드 ==========
+
 const defaultSubjects = [
   { name: '자료구조', sCount: 2, tCount: 2, sWeights: [30,30], tWeights: [20,20] },
   { name: '영어', sCount: 2, tCount: 1, sWeights: [20,30], tWeights: [50] },
@@ -825,8 +1416,6 @@ function saveNewSubject() {
   alert(`${name} 과목이 추가되었습니다!`);
 }
 
-// 입력값 변경 감지 제거됨
-
 const themeBtn = document.getElementById("themeToggle");
 function applyTheme(t){
   document.body.dataset.theme = t;
@@ -924,7 +1513,6 @@ function calculate(){
     wSum += w;
   }
 
-  // 기말고사 점수 및 비중 저장
   let finalScore = 0;
   for(let i=0;i<tCnt;i++){
     const score = Number(document.getElementById(`t${i}`).value) || 0;
@@ -958,7 +1546,6 @@ function calculate(){
   const drop = (currCut - 0.01 - (total - finalScore*finalW)) / finalW;
   const dropMsg = drop<0 ? "떨어질 등급 없음" : `${drop.toFixed(2)}점↓`;
 
-  // 기말고사 100점 가정 시 예상 점수 계산
   let predictionHTML = "";
   if(finalScore !== 100) {
     const totalWithoutFinal = total - finalScore * finalW;
@@ -1058,6 +1645,7 @@ window.onclick = e => {
   if(e.target.id === "guideModal") closeGuide();
   if(e.target.id === "avgModal") closeAvgCalc();
   if(e.target.id === "addSubjectModal") closeAddSubject();
+  if(e.target.id === "mealSettingsModal") closeMealSettings();
 };
 
 function openGuide(){
@@ -1156,20 +1744,6 @@ function getRating() {
   return localStorage.getItem('userRating');
 }
 
-window.addEventListener('load', function() {
-  const saved = getRating();
-  if(saved) {
-    highlightStars(saved);
-    ratingResult.textContent = `평가해 주셔서 감사합니다! (${saved}점)`;
-    ratingResult.style.color = '#34c759';
-  }
-  
-  // 과목 테이블 렌더링
-  renderGuideTable();
-});
-
-// ========== 평균 계산기 기능 ==========
-
 function openAvgCalc() {
   document.getElementById("avgModal").style.display = "flex";
   resetAvgCalc();
@@ -1257,8 +1831,6 @@ function calculateAvg() {
   document.getElementById("avgResult").style.display = "block";
 }
 
-// ========== PWA 설치 기능 ==========
-
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -1292,14 +1864,29 @@ function installApp() {
       deferredPrompt = null;
     });
   } else {
-    // iOS Safari
     alert('홈 화면에 추가하려면:\n\n1. 하단의 공유 버튼을 누르세요\n2. "홈 화면에 추가"를 선택하세요');
     closeInstallBanner();
   }
 }
 
-// iOS에서도 배너 표시
 window.addEventListener('load', () => {
+  loadMealDate();
+  loadMealData();
+  
+  if (localStorage.getItem('mealNotificationEnabled') === 'true') {
+    document.getElementById('notificationSwitch').classList.add('on');
+    scheduleMealNotifications();
+  }
+  
+  renderGuideTable();
+  
+  const saved = getRating();
+  if(saved) {
+    highlightStars(saved);
+    ratingResult.textContent = `평가해 주셔서 감사합니다! (${saved}점)`;
+    ratingResult.style.color = '#34c759';
+  }
+  
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone;
   const dismissed = localStorage.getItem('installBannerDismissed');
@@ -1309,7 +1896,6 @@ window.addEventListener('load', () => {
   }
 });
 
-// 서비스 워커 등록
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
